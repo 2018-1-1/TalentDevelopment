@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: pre
+server:
+  port: 9090
+token:
+  expireTime: 6000
+  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
+---
+spring:
+  profiles: pre
+  datasource:
+    url: jdbc:mysql://localhost:3306/talent?characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+
