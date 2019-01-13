@@ -1,14 +1,14 @@
 package com.cuit.talent.model;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "questionnaire_issue", schema = "talent", catalog = "")
 public class QuestionnaireIssue {
     private int id;
-    private Date issueTime;
+    private Timestamp issueTime;
     private User userByUserId;
     private Questionnaire questionnaireByQuestionnaireId;
 
@@ -24,11 +24,11 @@ public class QuestionnaireIssue {
 
     @Basic
     @Column(name = "issue_time")
-    public Date getIssueTime() {
+    public Timestamp getIssueTime() {
         return issueTime;
     }
 
-    public void setIssueTime(Date issueTime) {
+    public void setIssueTime(Timestamp issueTime) {
         this.issueTime = issueTime;
     }
 

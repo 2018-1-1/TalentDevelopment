@@ -1,28 +1,28 @@
 package com.cuit.talent.controller;
 
-import com.cuit.talent.model.User;
+import com.alibaba.fastjson.JSONObject;
 import com.cuit.talent.utils.valueobj.Message;
-import com.cuit.talent.utils.valueobj.Token;
 import com.cuit.talent.service.UserService;
-import com.cuit.talent.utils.JwtHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private JwtHelper jwtHelper;
-
-    @Autowired
-    private Token token;
-
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     public ResponseEntity userLogin(@RequestParam("studentId")String studentId,@RequestParam("password")String password){
         Message message = userService.ensureUser(studentId, password);
         return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/user/create", method = RequestMethod.POST)
+    public ResponseEntity createUser(@RequestBody JSONObject jsonObject){
+        System.out.println(jsonObject.toJSONString());
+        return ResponseEntity.ok(null);
     }
 }

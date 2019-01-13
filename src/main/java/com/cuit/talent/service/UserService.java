@@ -61,7 +61,6 @@ public class UserService {
                     Integer roleId = existUser.getRoleByRoleId().getId();
                     Integer userId = existUser.getId();
                     token.setToken(jwtHelper.createToken(userId, roleId));
-
                     map.put("userId", userId);
                     map.put("roleId", roleId);
                     map.put("token", token);

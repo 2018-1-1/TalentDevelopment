@@ -9,7 +9,6 @@ import java.util.Objects;
 public class QuestionBank {
     private int id;
     private String problemDescription;
-    private Collection<QuestionAnswer> questionAnswersById;
     private QuestionType questionTypeByQuestionTypeId;
 
     @Id
@@ -44,15 +43,6 @@ public class QuestionBank {
     @Override
     public int hashCode() {
         return Objects.hash(id, problemDescription);
-    }
-
-    @OneToMany(mappedBy = "questionBankByQuestionBankId")
-    public Collection<QuestionAnswer> getQuestionAnswersById() {
-        return questionAnswersById;
-    }
-
-    public void setQuestionAnswersById(Collection<QuestionAnswer> questionAnswersById) {
-        this.questionAnswersById = questionAnswersById;
     }
 
     @ManyToOne
