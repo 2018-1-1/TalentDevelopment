@@ -7,8 +7,6 @@ import java.util.Objects;
 @Table(name = "user_course", schema = "talent", catalog = "")
 public class UserCourse {
     private int id;
-    private Integer courseId;
-    private int userId;
     private int mark;
     private Course courseByCourseId;
     private User userByUserId;
@@ -21,26 +19,6 @@ public class UserCourse {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "course_id")
-    public Integer getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
-    }
-
-    @Basic
-    @Column(name = "user_id")
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     @Basic
@@ -59,15 +37,13 @@ public class UserCourse {
         if (o == null || getClass() != o.getClass()) return false;
         UserCourse that = (UserCourse) o;
         return id == that.id &&
-                userId == that.userId &&
-                mark == that.mark &&
-                Objects.equals(courseId, that.courseId);
+                mark == that.mark;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, courseId, userId, mark);
+        return Objects.hash(id, mark);
     }
 
     @ManyToOne

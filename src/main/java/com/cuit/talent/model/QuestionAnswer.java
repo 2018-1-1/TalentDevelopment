@@ -7,7 +7,6 @@ import java.util.Objects;
 @Table(name = "question_answer", schema = "talent", catalog = "")
 public class QuestionAnswer {
     private int id;
-    private int questionBankId;
     private int answerKey;
     private String answerValue;
     private QuestionBank questionBankByQuestionBankId;
@@ -20,16 +19,6 @@ public class QuestionAnswer {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "question_bank_id")
-    public int getQuestionBankId() {
-        return questionBankId;
-    }
-
-    public void setQuestionBankId(int questionBankId) {
-        this.questionBankId = questionBankId;
     }
 
     @Basic
@@ -58,7 +47,6 @@ public class QuestionAnswer {
         if (o == null || getClass() != o.getClass()) return false;
         QuestionAnswer that = (QuestionAnswer) o;
         return id == that.id &&
-                questionBankId == that.questionBankId &&
                 answerKey == that.answerKey &&
                 Objects.equals(answerValue, that.answerValue);
     }
@@ -66,7 +54,7 @@ public class QuestionAnswer {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, questionBankId, answerKey, answerValue);
+        return Objects.hash(id, answerKey, answerValue);
     }
 
     @ManyToOne

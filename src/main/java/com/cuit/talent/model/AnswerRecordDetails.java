@@ -8,7 +8,6 @@ import java.util.Objects;
 public class AnswerRecordDetails {
     private int id;
     private int questionBankId;
-    private int answerRecordId;
     private int optionA;
     private int optionB;
     private int optionC;
@@ -36,16 +35,6 @@ public class AnswerRecordDetails {
 
     public void setQuestionBankId(int questionBankId) {
         this.questionBankId = questionBankId;
-    }
-
-    @Basic
-    @Column(name = "answer_record_id")
-    public int getAnswerRecordId() {
-        return answerRecordId;
-    }
-
-    public void setAnswerRecordId(int answerRecordId) {
-        this.answerRecordId = answerRecordId;
     }
 
     @Basic
@@ -125,7 +114,6 @@ public class AnswerRecordDetails {
         AnswerRecordDetails that = (AnswerRecordDetails) o;
         return id == that.id &&
                 questionBankId == that.questionBankId &&
-                answerRecordId == that.answerRecordId &&
                 optionA == that.optionA &&
                 optionB == that.optionB &&
                 optionC == that.optionC &&
@@ -138,7 +126,7 @@ public class AnswerRecordDetails {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, questionBankId, answerRecordId, optionA, optionB, optionC, optionD, optionE, optionF, fillBlankAnswer);
+        return Objects.hash(id, questionBankId, optionA, optionB, optionC, optionD, optionE, optionF, fillBlankAnswer);
     }
 
     @ManyToOne

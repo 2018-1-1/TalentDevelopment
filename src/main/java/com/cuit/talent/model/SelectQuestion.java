@@ -7,8 +7,6 @@ import java.util.Objects;
 @Table(name = "select_question", schema = "talent", catalog = "")
 public class SelectQuestion {
     private int id;
-    private int questionnaireId;
-    private int questionBankId;
     private Questionnaire questionnaireByQuestionnaireId;
     private QuestionBank questionBankByQuestionBankId;
 
@@ -22,40 +20,18 @@ public class SelectQuestion {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "questionnaire_id")
-    public int getQuestionnaireId() {
-        return questionnaireId;
-    }
-
-    public void setQuestionnaireId(int questionnaireId) {
-        this.questionnaireId = questionnaireId;
-    }
-
-    @Basic
-    @Column(name = "question_bank_id")
-    public int getQuestionBankId() {
-        return questionBankId;
-    }
-
-    public void setQuestionBankId(int questionBankId) {
-        this.questionBankId = questionBankId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SelectQuestion that = (SelectQuestion) o;
-        return id == that.id &&
-                questionnaireId == that.questionnaireId &&
-                questionBankId == that.questionBankId;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, questionnaireId, questionBankId);
+        return Objects.hash(id);
     }
 
     @ManyToOne

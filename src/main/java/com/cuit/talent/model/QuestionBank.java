@@ -8,7 +8,6 @@ import java.util.Objects;
 public class QuestionBank {
     private int id;
     private String problemDescription;
-    private int questionTypeId;
     private QuestionType questionTypeByQuestionTypeId;
 
     @Id
@@ -31,30 +30,19 @@ public class QuestionBank {
         this.problemDescription = problemDescription;
     }
 
-    @Basic
-    @Column(name = "question_type_id")
-    public int getQuestionTypeId() {
-        return questionTypeId;
-    }
-
-    public void setQuestionTypeId(int questionTypeId) {
-        this.questionTypeId = questionTypeId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QuestionBank that = (QuestionBank) o;
         return id == that.id &&
-                questionTypeId == that.questionTypeId &&
                 Objects.equals(problemDescription, that.problemDescription);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, problemDescription, questionTypeId);
+        return Objects.hash(id, problemDescription);
     }
 
     @ManyToOne

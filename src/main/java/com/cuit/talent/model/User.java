@@ -8,7 +8,6 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private Integer roleId;
     private Integer sex;
     private String studentId;
     private Role roleByRoleId;
@@ -33,21 +32,6 @@ public class User {
         this.username = username;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id &&
-                Objects.equals(username, user.username);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, username);
-    }
-
     @Basic
     @Column(name = "password")
     public String getPassword() {
@@ -56,16 +40,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Basic
-    @Column(name = "role_id")
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
     }
 
     @Basic
@@ -86,6 +60,24 @@ public class User {
 
     public void setStudentId(String studentId) {
         this.studentId = studentId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(sex, user.sex) &&
+                Objects.equals(studentId, user.studentId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, username, password, sex, studentId);
     }
 
     @ManyToOne

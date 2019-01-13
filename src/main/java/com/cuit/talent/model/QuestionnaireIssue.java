@@ -8,8 +8,6 @@ import java.util.Objects;
 @Table(name = "questionnaire_issue", schema = "talent", catalog = "")
 public class QuestionnaireIssue {
     private int id;
-    private Integer userId;
-    private Integer questionnaireId;
     private Date issueTime;
     private User userByUserId;
     private Questionnaire questionnaireByQuestionnaireId;
@@ -22,26 +20,6 @@ public class QuestionnaireIssue {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "user_id")
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    @Basic
-    @Column(name = "questionnaire_id")
-    public Integer getQuestionnaireId() {
-        return questionnaireId;
-    }
-
-    public void setQuestionnaireId(Integer questionnaireId) {
-        this.questionnaireId = questionnaireId;
     }
 
     @Basic
@@ -60,15 +38,13 @@ public class QuestionnaireIssue {
         if (o == null || getClass() != o.getClass()) return false;
         QuestionnaireIssue that = (QuestionnaireIssue) o;
         return id == that.id &&
-                Objects.equals(userId, that.userId) &&
-                Objects.equals(questionnaireId, that.questionnaireId) &&
                 Objects.equals(issueTime, that.issueTime);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, userId, questionnaireId, issueTime);
+        return Objects.hash(id, issueTime);
     }
 
     @ManyToOne

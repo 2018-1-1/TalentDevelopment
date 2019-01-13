@@ -7,8 +7,6 @@ import java.util.Objects;
 @Table(name = "answer_record", schema = "talent", catalog = "")
 public class AnswerRecord {
     private int id;
-    private int userId;
-    private int questionnaireIssueId;
     private int isFill;
     private User userByUserId;
     private QuestionnaireIssue questionnaireIssueByQuestionnaireIssueId;
@@ -21,26 +19,6 @@ public class AnswerRecord {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "user_id")
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    @Basic
-    @Column(name = "questionnaire_issue_id")
-    public int getQuestionnaireIssueId() {
-        return questionnaireIssueId;
-    }
-
-    public void setQuestionnaireIssueId(int questionnaireIssueId) {
-        this.questionnaireIssueId = questionnaireIssueId;
     }
 
     @Basic
@@ -59,15 +37,13 @@ public class AnswerRecord {
         if (o == null || getClass() != o.getClass()) return false;
         AnswerRecord that = (AnswerRecord) o;
         return id == that.id &&
-                userId == that.userId &&
-                questionnaireIssueId == that.questionnaireIssueId &&
                 isFill == that.isFill;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, userId, questionnaireIssueId, isFill);
+        return Objects.hash(id, isFill);
     }
 
     @ManyToOne
