@@ -16,9 +16,9 @@ public class UserController {
     @Autowired
     private Token token;
 
-
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     public ResponseEntity userLogin(){
+
         return ResponseEntity.ok(null);
     }
 }
