@@ -4,7 +4,7 @@ spring:
 server:
   port: 9090
 token:
-  expireTime: 6000
+  expireTime: 6
   base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
 ---
 spring:
