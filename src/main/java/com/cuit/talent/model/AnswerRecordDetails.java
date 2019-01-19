@@ -7,7 +7,6 @@ import java.util.Objects;
 @Table(name = "answer_record_details", schema = "talent", catalog = "")
 public class AnswerRecordDetails {
     private int id;
-    private int questionBankId;
     private int optionA;
     private int optionB;
     private int optionC;
@@ -15,6 +14,7 @@ public class AnswerRecordDetails {
     private int optionE;
     private int optionF;
     private String fillBlankAnswer;
+    private QuestionBank questionBankByQuestionBankId;
     private AnswerRecord answerRecordByAnswerRecordId;
 
     @Id
@@ -27,15 +27,6 @@ public class AnswerRecordDetails {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "question_bank_id")
-    public int getQuestionBankId() {
-        return questionBankId;
-    }
-
-    public void setQuestionBankId(int questionBankId) {
-        this.questionBankId = questionBankId;
-    }
 
     @Basic
     @Column(name = "option_a")
@@ -113,7 +104,6 @@ public class AnswerRecordDetails {
         if (o == null || getClass() != o.getClass()) return false;
         AnswerRecordDetails that = (AnswerRecordDetails) o;
         return id == that.id &&
-                questionBankId == that.questionBankId &&
                 optionA == that.optionA &&
                 optionB == that.optionB &&
                 optionC == that.optionC &&
@@ -125,8 +115,17 @@ public class AnswerRecordDetails {
 
     @Override
     public int hashCode() {
+        return Objects.hash(id, optionA, optionB, optionC, optionD, optionE, optionF, fillBlankAnswer);
+    }
 
-        return Objects.hash(id, questionBankId, optionA, optionB, optionC, optionD, optionE, optionF, fillBlankAnswer);
+    @ManyToOne
+    @JoinColumn(name = "question_bank_id", referencedColumnName = "id", nullable = false)
+    public QuestionBank getQuestionBankByQuestionBankId() {
+        return questionBankByQuestionBankId;
+    }
+
+    public void setQuestionBankByQuestionBankId(QuestionBank questionBankByQuestionBankId) {
+        this.questionBankByQuestionBankId = questionBankByQuestionBankId;
     }
 
     @ManyToOne

@@ -54,8 +54,11 @@ public class UserService {
         QUser user = QUser.user;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.and(user.id.eq(id));
-        User existUser  = userRepository.findOne(booleanBuilder).get();
-        return existUser;
+        Optional<User> existUser = userRepository.findOne(booleanBuilder);
+        if (existUser.equals(Optional.empty())){
+            return null;
+        }
+        return existUser.get();
     }
 
     public Message ensureUser(String studentId, String password){

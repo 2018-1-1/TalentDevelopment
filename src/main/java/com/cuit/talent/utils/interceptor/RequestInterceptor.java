@@ -39,7 +39,7 @@ public class RequestInterceptor implements HandlerInterceptor {
             }
         }
         if (!flag) {
-                String token = request.getHeader("Token");
+                String token = request.getHeader("Authorization");
                 if (StringUtils.isEmpty(token)){
                     log.info("无Token");
                     message.setCode(0);
