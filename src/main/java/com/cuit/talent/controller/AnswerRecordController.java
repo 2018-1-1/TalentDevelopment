@@ -13,7 +13,7 @@ public class AnswerRecordController {
     @Autowired
     private AnswerRecordService answerRecordService;
 
-    @RequestMapping(value = "/answerRecord/saveAnswerRecord", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/answerRecord/saveAnswerRecord", method = RequestMethod.POST)
     public ResponseEntity saveAnswerRecord(Integer userId,Integer questionnaireIssueId){
         Message message =  new Message();
         try {
