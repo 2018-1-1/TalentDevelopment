@@ -6,6 +6,7 @@ import com.cuit.talent.model.QuestionnaireIssue;
 import com.cuit.talent.model.User;
 import com.cuit.talent.repository.AnswerRecordDetailsRepository;
 import com.cuit.talent.repository.AnswerRecordRepository;
+import com.cuit.talent.repository.QuestionnaireIssueRepository;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class AnswerRecordService {
     private AnswerRecordRepository answerRecordRepository;
     @Autowired
     private AnswerRecordDetailsRepository answerRecordDetailsRepository;
+
+    @Autowired
+    private QuestionnaireIssueRepository questionnaireIssueRepository;
 
     public void saveAnswerRecord(Integer userId,Integer questionnaireIssueId){
 
@@ -45,4 +49,18 @@ public class AnswerRecordService {
 
 
     }
+
+    public boolean checkCanFillQuestionnaireIssue(QuestionnaireIssue questionnaireIssue,Integer userId){
+        QAnswerRecord qAnswerRecord = QAnswerRecord.answerRecord;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qAnswerRecord.questionnaireIssueByQuestionnaireIssueId.eq(questionnaireIssue));
+        booleanBuilder.and(qAnswerRecord.userByUserId.id.eq(userId));
+        Iterable<AnswerRecord> answerRecords = answerRecordRepository.findAll(booleanBuilder);
+        if(answerRecords.iterator().hasNext()){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
 }

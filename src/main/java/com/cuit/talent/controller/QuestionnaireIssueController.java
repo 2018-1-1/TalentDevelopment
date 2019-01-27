@@ -50,4 +50,39 @@ public class QuestionnaireIssueController {
 
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/api/questionnaire/deleteQuestionnaireIssueById", method = RequestMethod.POST)
+    public ResponseEntity deleteQuestionnaireIssueByUserId(@RequestBody JsonNode jsonNode){
+        Message message =  new Message();
+        try {
+            Integer id = Integer.parseInt(jsonNode.path("id").textValue());
+            questionnaireIssueService.deleteQuestionnaireIssueById(id);
+            message.setMsg("删除问卷成功");
+            message.setCode(1);
+        }catch (Exception e){
+            e.printStackTrace();
+            message.setCode(0);
+            message.setMsg("删除问卷失败");
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
+
+    @RequestMapping(value = "/api/questionnaire/findQuestionnaireCanFill", method = RequestMethod.GET)
+    public ResponseEntity findQuestionnaireCanFill(Integer userId){
+        Message message =  new Message();
+        try {
+            message.setData(questionnaireIssueService.findQuestionnaireCanFill(userId));
+            message.setMsg("获取可填问卷成功");
+            message.setCode(1);
+        }catch (Exception e){
+            e.printStackTrace();
+            message.setCode(0);
+            message.setMsg("获取可填问卷失败");
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
 }
