@@ -11,10 +11,10 @@ import com.cuit.talent.utils.valueobj.Token;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.*;
+
 
 @Service
 public class UserService {
@@ -60,7 +60,7 @@ public class UserService {
         }
         return existUser.get();
     }
-
+    @Transactional
     public Message ensureUser(String studentId, String password){
         Message message = new Message();
         if (studentId.trim().isEmpty() || studentId.equals(null)
@@ -97,7 +97,6 @@ public class UserService {
     public Message createUser(ArrayList<Map<String, Object>> userList){
         Message message = new Message();
         for (int i = 0; i <userList.size();i++){
-            System.out.println(i);
             userList.get(i).forEach((k,v)->{
                 if (k.equals("学号")) studentId = (String) v;
                 if (k.equals("姓名")) username = (String) v;
@@ -113,7 +112,7 @@ public class UserService {
             user.setStudentId(studentId);
             user.setSex(Integer.parseInt(sex));
             user.setPassword(studentId);
-            user.setStartDate(Date.valueOf(startDate));
+            user.setStartDate(startDate);
             if (this.findByStudentId(studentId) != null){
                  message.setCode(0);
                  message.setMsg("学号为"+studentId+"的学生已经录入过");

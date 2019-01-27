@@ -1,8 +1,6 @@
 package com.cuit.talent.model;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -13,7 +11,7 @@ public class User {
     private Integer sex;
     private String studentId;
     private Role roleByRoleId;
-    private Date startDate;
+    private String startDate;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,11 +65,11 @@ public class User {
 
     @Basic
     @Column(name = "start_date")
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
