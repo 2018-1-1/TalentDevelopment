@@ -12,10 +12,9 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -39,6 +38,7 @@ public class UserService {
     String sex = null;
     String studentId = null;
     String grade = null;
+    String startDate = null;
     public User findByStudentId(String studentId){
        QUser user = QUser.user;
        BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -95,6 +95,7 @@ public class UserService {
     }
 
     public Message createUser(ArrayList<Map<String, Object>> userList){
+        Message message = new Message();
         for (int i = 0; i <userList.size();i++){
             System.out.println(i);
             userList.get(i).forEach((k,v)->{
@@ -105,12 +106,19 @@ public class UserService {
                     if (v.equals("女")) sex = "0" ;
                 }
                 if (k.equals("班级")) grade = (String) v;
+                if (k.equals("入学年份")) startDate = (String) v;
             });
             User user = new User();
             user.setUsername(username);
             user.setStudentId(studentId);
             user.setSex(Integer.parseInt(sex));
             user.setPassword(studentId);
+            user.setStartDate(Date.valueOf(startDate));
+            if (this.findByStudentId(studentId) != null){
+                 message.setCode(0);
+                 message.setMsg("学号为"+studentId+"的学生已经录入过");
+                 return message;
+            }
             Role role = new Role();
             role.setId(3);
             user.setRoleByRoleId(role);
@@ -118,7 +126,6 @@ public class UserService {
             Grade grade1 =  gradeService.findByGrade(grade).get();
             userGradeService.createUserGrade(user, grade1);
         }
-        Message message = new Message();
         message.setCode(1);
         message.setMsg("录入学生信息成功");
         return message;
