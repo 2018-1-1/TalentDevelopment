@@ -22,7 +22,7 @@ public class UserCourseController {
         Message message = userCourseService.findUserCourseNameAndMarkByStudentId(studentId);
         return ResponseEntity.ok(message);
     }
-    
+
     @RequestMapping(value = "/api/userCourse/addCourseMark", method = RequestMethod.POST)
     public ResponseEntity addUserCourse(@RequestBody JSONObject jsonObject){
         ArrayList<Map<String, Object>> userCourseList = (ArrayList) jsonObject.get("userCourse");
