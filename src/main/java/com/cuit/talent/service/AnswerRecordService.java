@@ -7,9 +7,12 @@ import com.cuit.talent.model.User;
 import com.cuit.talent.repository.AnswerRecordDetailsRepository;
 import com.cuit.talent.repository.AnswerRecordRepository;
 import com.cuit.talent.repository.QuestionnaireIssueRepository;
+import com.cuit.talent.utils.valueobj.Answer;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AnswerRecordService {
@@ -22,7 +25,7 @@ public class AnswerRecordService {
     @Autowired
     private QuestionnaireIssueRepository questionnaireIssueRepository;
 
-    public void saveAnswerRecord(Integer userId,Integer questionnaireIssueId){
+    public Integer saveAnswerRecord(Integer userId, Integer questionnaireIssueId){
 
         AnswerRecord answerRecord = new AnswerRecord();
         User user = new User();
@@ -31,9 +34,9 @@ public class AnswerRecordService {
         QuestionnaireIssue questionnaireIssue = new QuestionnaireIssue();
         questionnaireIssue.setId(questionnaireIssueId);
         answerRecord.setQuestionnaireIssueByQuestionnaireIssueId(questionnaireIssue);
-        answerRecord.setIsFill(1);
+        answerRecord.setIsFill(0);
         answerRecordRepository.save(answerRecord);
-        System.out.println("-----------------"+answerRecord.getId());
+       return  answerRecord.getId();
     }
 
     public boolean checkAnswerRecordExist(Integer userId,Integer questionnaireIssueId){
@@ -42,8 +45,10 @@ public class AnswerRecordService {
         booleanBuilder.and(qAnswerRecord.userByUserId.id.eq(userId));
         booleanBuilder.and(qAnswerRecord.questionnaireIssueByQuestionnaireIssueId.id.eq(questionnaireIssueId));
         Iterable<AnswerRecord> answerRecords = answerRecordRepository.findAll(booleanBuilder);
-        if( answerRecords.iterator().hasNext()){
-              return false;
+        while ( answerRecords.iterator().hasNext()){
+           if(answerRecords.iterator().next().getIsFill()==1){
+               return false;
+           }
         }
         return  true;
 
