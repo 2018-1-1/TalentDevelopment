@@ -24,8 +24,8 @@ public class UserCourseService {
     public Message findUserCourseNameAndMarkByStudentId(String studentId){
         Message message = new Message();
         try {
-            Map<String, Object> map = new HashMap<>();
 
+            List<UserCourseSelect> userCourseSelectList = new ArrayList<UserCourseSelect>();
             QUserCourse userCourse  = QUserCourse.userCourse;
             BooleanBuilder booleanBuilder = new BooleanBuilder();
             booleanBuilder.and(userCourse.userByUserId.studentId.eq(studentId));
@@ -34,12 +34,19 @@ public class UserCourseService {
             Iterator it = userCourseList.iterator();
             while(it.hasNext()) {
                 UserCourse userCourse1 = (UserCourse) it.next();
-                map.put(userCourse1.getCourseByCourseId().getCourseName(),userCourse1.getMark());
+
+                UserCourseSelect userCourseSelect = new UserCourseSelect();
+                userCourseSelect.setCourseName(userCourse1.getCourseByCourseId().getCourseName());
+                userCourseSelect.setGrade(userCourse1.getMark());
+
+                userCourseSelectList.add(userCourseSelect);
+
+
             }
 
             message.setMsg("返回成功");
             message.setCode(1);
-            message.setData(map);
+            message.setData(userCourseSelectList);
         }catch (Exception e){
             message.setMsg("返回失败");
             message.setCode(0);
