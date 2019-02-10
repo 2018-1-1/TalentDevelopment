@@ -8,6 +8,7 @@ import com.cuit.talent.repository.UserRepository;
 import com.cuit.talent.utils.JwtHelper;
 import com.cuit.talent.utils.valueobj.Message;
 import com.cuit.talent.utils.valueobj.Token;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,32 +40,34 @@ public class UserService {
     String studentId = null;
     String grade = null;
     String startDate = null;
-    public User findByStudentId(String studentId){
-       QUser user = QUser.user;
-       BooleanBuilder booleanBuilder = new BooleanBuilder();
-       booleanBuilder.and(user.studentId.eq(studentId));
-       Optional<User> existUser = userRepository.findOne(booleanBuilder);
-       if (existUser.equals(Optional.empty())){
-           return null;
-       }
-       return existUser.get();
-    }
 
-    public User findUser(Integer id){
+    public User findByStudentId(String studentId) {
         QUser user = QUser.user;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(user.id.eq(id));
+        booleanBuilder.and(user.studentId.eq(studentId));
         Optional<User> existUser = userRepository.findOne(booleanBuilder);
-        if (existUser.equals(Optional.empty())){
+        if (existUser.equals(Optional.empty())) {
             return null;
         }
         return existUser.get();
     }
+
+    public User findUser(Integer id) {
+        QUser user = QUser.user;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(user.id.eq(id));
+        Optional<User> existUser = userRepository.findOne(booleanBuilder);
+        if (existUser.equals(Optional.empty())) {
+            return null;
+        }
+        return existUser.get();
+    }
+
     @Transactional
-    public Message ensureUser(String studentId, String password){
+    public Message ensureUser(String studentId, String password) {
         Message message = new Message();
         if (studentId.trim().isEmpty() || studentId.equals(null)
-                || password.trim().isEmpty() || password.equals(null)){
+                || password.trim().isEmpty() || password.equals(null)) {
             message.setCode(0);
             message.setMsg("密码或学号为空");
             return message;
@@ -94,15 +97,15 @@ public class UserService {
         }
     }
 
-    public Message createUser(ArrayList<Map<String, Object>> userList){
+    public Message createUser(ArrayList<Map<String, Object>> userList) {
         Message message = new Message();
-        for (int i = 0; i <userList.size();i++){
-            userList.get(i).forEach((k,v)->{
+        for (int i = 0; i < userList.size(); i++) {
+            userList.get(i).forEach((k, v) -> {
                 if (k.equals("学号")) studentId = (String) v;
                 if (k.equals("姓名")) username = (String) v;
-                if (k.equals("性别")){
+                if (k.equals("性别")) {
                     if (v.equals("男")) sex = "1";
-                    if (v.equals("女")) sex = "0" ;
+                    if (v.equals("女")) sex = "0";
                 }
                 if (k.equals("班级")) grade = (String) v;
                 if (k.equals("入学年份")) startDate = (String) v;
@@ -113,20 +116,58 @@ public class UserService {
             user.setSex(Integer.parseInt(sex));
             user.setPassword(studentId);
             user.setStartDate(startDate);
-            if (this.findByStudentId(studentId) != null){
-                 message.setCode(0);
-                 message.setMsg("学号为"+studentId+"的学生已经录入过");
-                 return message;
+            if (this.findByStudentId(studentId) != null) {
+                message.setCode(0);
+                message.setMsg("学号为" + studentId + "的学生已经录入过");
+                return message;
             }
             Role role = new Role();
             role.setId(3);
             user.setRoleByRoleId(role);
             userRepository.saveAndFlush(user);
-            Grade grade1 =  gradeService.findByGrade(grade).get();
+            Grade grade1 = gradeService.findByGrade(grade).get();
             userGradeService.createUserGrade(user, grade1);
         }
         message.setCode(1);
         message.setMsg("录入学生信息成功");
+        return message;
+    }
+
+    public Message updateUserPassword(JsonNode jsonNode) {
+        Message message = new Message();
+        String userId = jsonNode.path("userId").textValue();
+        if (userId == null || userId.trim().isEmpty()) {
+            message.setMsg("用户id为空");
+            message.setCode(0);
+            return message;
+        }
+        String oldPassword = jsonNode.path("oldPassword").textValue();
+        if (oldPassword.equals(null) || oldPassword.trim().isEmpty()) {
+            message.setMsg("用户旧密码为空");
+            message.setCode(0);
+            return message;
+        }
+        String newPassword = jsonNode.path("newPassword").textValue();
+        if (newPassword.equals(null) || newPassword.trim().isEmpty()) {
+            message.setMsg("用户新密码为空");
+            message.setCode(0);
+            return message;
+        }
+        User existsUser = findUser(Integer.parseInt(userId));
+        if (existsUser == null) {
+            message.setMsg("不存在该用户");
+            message.setCode(0);
+            return message;
+        }
+        if (!existsUser.getPassword().equals(oldPassword)) {
+            message.setMsg("旧密码错误");
+            message.setCode(0);
+            return message;
+        }
+        existsUser.setPassword(newPassword);
+        userRepository.saveAndFlush(existsUser);
+        message.setCode(1);
+        message.setMsg("更新密码成功");
         return message;
     }
 }
