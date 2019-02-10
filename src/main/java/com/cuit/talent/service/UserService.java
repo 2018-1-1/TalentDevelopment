@@ -153,6 +153,11 @@ public class UserService {
             message.setCode(0);
             return message;
         }
+        if (oldPassword.equals(newPassword)){
+            message.setMsg("新密码与旧密码不能相同");
+            message.setCode(0);
+            return message;
+        }
         User existsUser = findUser(Integer.parseInt(userId));
         if (existsUser == null) {
             message.setMsg("不存在该用户");
