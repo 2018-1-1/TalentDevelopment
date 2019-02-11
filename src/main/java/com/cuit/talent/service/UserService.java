@@ -123,4 +123,39 @@ public class UserService {
         message.setMsg("录入学生信息成功");
         return message;
     }
+
+    public Message updateUser(String studentId, String password, String updatePassword) {
+        Message message = new Message();
+        try{
+            QUser user = QUser.user;
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+            booleanBuilder.and(user.studentId.eq(studentId));
+            Optional<User> existUser = userRepository.findOne(booleanBuilder);
+            if(!existUser.isPresent()) {
+                message.setCode(0);
+                message.setMsg("user not exist！");
+                return message;
+            }
+            User user1 = existUser.get();
+            if(!user1.getPassword().equals(password)){
+                message.setCode(0);
+                message.setMsg("user password error！");
+                return message;
+            }
+            if(user1.getPassword().equals(updatePassword)){
+                message.setCode(0);
+                message.setMsg("user password don't update！");
+                return message;
+            }
+            user1.setPassword(updatePassword);
+            userRepository.saveAndFlush(user1);
+
+            message.setCode(1);
+            message.setMsg("user update success！");
+        }catch (Exception e){
+            message.setCode(0);
+            message.setMsg("user update error！");
+        }
+        return message;
+    }
 }
