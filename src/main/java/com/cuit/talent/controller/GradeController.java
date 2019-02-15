@@ -21,4 +21,5 @@ public class GradeController {
         List<Grade> grades = gradeService.findAll();
         return ResponseEntity.ok(grades);
     }
+
 }

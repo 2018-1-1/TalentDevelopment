@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok(message);
     }
 
-    @RequestMapping(value = "/api/user/rePassword")
+    @RequestMapping(value = "/api/user/rePassword",method = RequestMethod.POST)
     public ResponseEntity updateUserPassword(@RequestBody JsonNode jsonNode){
         Message message = userService.updateUserPassword(jsonNode);
         return ResponseEntity.ok(message);
