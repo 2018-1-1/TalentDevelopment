@@ -83,4 +83,19 @@ public class AnswerRecordController {
         }
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/api/answerRecord/findAllRecordsByQuestionnaireIssue", method = RequestMethod.GET)
+    public ResponseEntity findAllQuestionsByQuestionnaireId(Integer questionnaireIssueId) {
+        Message message = new Message();
+        try {
+            message.setMsg("查找问卷的所有答题详情成功");
+            message.setData(answerRecordService.findAllRecordsByQuestionnaireIssue(questionnaireIssueId));
+            message.setCode(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            message.setCode(0);
+            message.setMsg("返回失败，请稍后再试");
+        }
+        return ResponseEntity.ok(message);
+    }
 }
