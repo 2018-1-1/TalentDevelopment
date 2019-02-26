@@ -2,10 +2,11 @@ package com.cuit.talent.service;
 
 import com.cuit.talent.model.*;
 import com.cuit.talent.repository.QuestionnaireIssueRepository;
+import com.cuit.talent.utils.valueobj.QuestionnaireIssueAndFillNumber;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
-import javafx.util.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -53,6 +54,34 @@ public class QuestionnaireIssueService {
             }
 
             return questionnaireIssues;
+        }else{
+            return null;
+        }
+    }
+
+    public List<QuestionnaireIssueAndFillNumber> findAllQuestionnaireIssueAndFillNumberByUserId(Integer userId){
+        if(userId != null) {
+            Sort sort = new Sort(Sort.Direction.DESC, "issueTime");
+            QQuestionnaireIssue qQuestionnaireIssue = QQuestionnaireIssue.questionnaireIssue;
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+            booleanBuilder.and(qQuestionnaireIssue.userByUserId.id.eq(userId));
+
+            Iterable<QuestionnaireIssue> questionnaireIssueIterable = questionnaireIssueRepository.findAll(booleanBuilder,sort);
+            List<QuestionnaireIssue> questionnaireIssues = Lists.newArrayList(questionnaireIssueIterable);
+            List<QuestionnaireIssueAndFillNumber> questionnaireIssueAndFillNumberList = new ArrayList<>();
+            QuestionnaireIssueAndFillNumber questionnaireIssueAndFillNumber;
+            for(QuestionnaireIssue questionnaireIssue:questionnaireIssues){
+                questionnaireIssue.getUserByUserId().setPassword(null);
+                questionnaireIssue.getUserByUserId().setRoleByRoleId(null);
+
+                questionnaireIssueAndFillNumber = new QuestionnaireIssueAndFillNumber();
+                questionnaireIssueAndFillNumber.setFillNumber(answerRecordService.findQuestionnaireIssueFillNumberByQuestionnaireIssueId(questionnaireIssue.getId()));
+                questionnaireIssueAndFillNumber.setQuestionnaireIssue(questionnaireIssue);
+                questionnaireIssueAndFillNumberList.add(questionnaireIssueAndFillNumber);
+
+            }
+
+            return questionnaireIssueAndFillNumberList;
         }else{
             return null;
         }
