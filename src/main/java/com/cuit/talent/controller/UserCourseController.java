@@ -17,7 +17,7 @@ public class UserCourseController {
     @Autowired
     private UserCourseService userCourseService;
 
-    @RequestMapping(value = "/api/userCourse/selectCourseByStudentId", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/userCourse/selectCourseByStudentId", method = RequestMethod.GET)
     public ResponseEntity selectCourseByStudentId(@RequestParam("studentId")String studentId){
         Message message = userCourseService.findUserCourseNameAndMarkByStudentId(studentId);
         return ResponseEntity.ok(message);
@@ -25,6 +25,7 @@ public class UserCourseController {
 
     @RequestMapping(value = "/api/userCourse/addCourseMark", method = RequestMethod.POST)
     public ResponseEntity addUserCourse(@RequestBody JSONObject jsonObject){
+        System.out.print(jsonObject);
         ArrayList<Map<String, Object>> userCourseList = (ArrayList) jsonObject.get("userCourse");
         Message message = userCourseService.addUserCourse(userCourseList);
         return  ResponseEntity.ok(message);
