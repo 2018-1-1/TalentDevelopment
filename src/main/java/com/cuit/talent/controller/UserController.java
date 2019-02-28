@@ -32,17 +32,7 @@ public class UserController {
         Message message = userService.createUser(userInformationList);
         return ResponseEntity.ok(message);
     }
-    @RequestMapping(value = "/api/user/update", method = RequestMethod.POST)
-    public ResponseEntity updateUser(@RequestBody JsonNode jsonNode){
 
-        String studentId = jsonNode.path("studentId").textValue();
-        String password = jsonNode.path("password").textValue();
-        String updatePassword= jsonNode.path("updatePassword").textValue();
-
-        Message message = userService.updateUser(studentId,password,updatePassword);
-        return ResponseEntity.ok(message);
-
-    }
     @RequestMapping(value = "/api/user/find", method = RequestMethod.GET)
     public ResponseEntity findUserByStudentId(@RequestParam(value = "userId")Integer userId){
         User user = userService.findUser(userId);
