@@ -17,7 +17,7 @@ public class UserCourseController {
     @Autowired
     private UserCourseService userCourseService;
 
-    @RequestMapping(value = "/api/userCourse/selectCourseByStudentId", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/userCourse/selectCourseByStudentId", method = RequestMethod.POST)
     public ResponseEntity selectCourseByStudentId(@RequestParam("studentId")String studentId){
         Message message = userCourseService.findUserCourseNameAndMarkByStudentId(studentId);
         return ResponseEntity.ok(message);
