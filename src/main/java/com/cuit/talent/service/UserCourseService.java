@@ -68,7 +68,7 @@ public class UserCourseService  {
                 for (Map.Entry<String, Object> entry : userCourseList.get(i).entrySet()) {
                     String key = entry.getKey();
                     System.out.println("first key"+i+":"+entry.getKey());
-                   
+
                     if (key.equals("学号")) {
                         String valueStudentid = (Integer) entry.getValue()+"";
                         System.out.println(valueStudentid+"---valueStudentid");
@@ -127,7 +127,6 @@ public class UserCourseService  {
             //添加失败
             message.setMsg("添加失败");
             message.setCode(0);
-            System.out.println(e);
         }
         return message;
     }

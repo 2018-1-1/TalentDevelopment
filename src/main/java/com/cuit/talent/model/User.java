@@ -11,7 +11,7 @@ public class User {
     private Integer sex;
     private String studentId;
     private Role roleByRoleId;
-
+    private String startDate;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +61,16 @@ public class User {
 
     public void setStudentId(String studentId) {
         this.studentId = studentId;
+    }
+
+    @Basic
+    @Column(name = "start_date")
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     @Override

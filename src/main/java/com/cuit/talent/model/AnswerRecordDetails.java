@@ -6,7 +6,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "answer_record_details", schema = "talent", catalog = "")
 public class AnswerRecordDetails {
-    private int id;
+    private Integer id;
     private int optionA;
     private int optionB;
     private int optionC;
@@ -19,11 +19,12 @@ public class AnswerRecordDetails {
 
     @Id
     @Column(name = "id")
-    public int getId() {
+    @GeneratedValue
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

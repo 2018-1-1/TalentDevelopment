@@ -25,6 +25,7 @@ public class UserCourseController {
 
     @RequestMapping(value = "/api/userCourse/addCourseMark", method = RequestMethod.POST)
     public ResponseEntity addUserCourse(@RequestBody JSONObject jsonObject){
+        System.out.print(jsonObject);
         ArrayList<Map<String, Object>> userCourseList = (ArrayList) jsonObject.get("userCourse");
         Message message = userCourseService.addUserCourse(userCourseList);
         return  ResponseEntity.ok(message);
