@@ -8,7 +8,6 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @Service
@@ -44,6 +43,9 @@ public class AnswerRecordService {
 
         for (SelectQuestion selectQuestion : selectQuestionList) {
 
+            if (selectQuestion.getQuestionBankByQuestionBankId().getQuestionTypeByQuestionTypeId().getId() == 3) {
+                continue;
+            }
             QQuestionAnswer qQuestionAnswer = QQuestionAnswer.questionAnswer;
             BooleanBuilder booleanBuilder1 = new BooleanBuilder();
             booleanBuilder1.and(qQuestionAnswer.questionBankByQuestionBankId.eq(selectQuestion.getQuestionBankByQuestionBankId()));
@@ -147,7 +149,7 @@ public class AnswerRecordService {
     }
 
 
-    public Long findQuestionnaireIssueFillNumberByQuestionnaireIssueId(Integer questionnaireIssueId){
+    public Long findQuestionnaireIssueFillNumberByQuestionnaireIssueId(Integer questionnaireIssueId) {
         QAnswerRecord qAnswerRecord = QAnswerRecord.answerRecord;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.and(qAnswerRecord.questionnaireIssueByQuestionnaireIssueId.id.eq(questionnaireIssueId));
