@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserCourseRepository extends QuerydslPredicateExecutor<UserCourse>, JpaRepository<UserCourse,Integer> {
 
+
 }
