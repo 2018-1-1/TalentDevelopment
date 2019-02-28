@@ -44,6 +44,9 @@ public class AnswerRecordService {
 
         for (SelectQuestion selectQuestion : selectQuestionList) {
 
+            if (selectQuestion.getQuestionBankByQuestionBankId().getQuestionTypeByQuestionTypeId().getId() == 3) {
+                continue;
+            }
             QQuestionAnswer qQuestionAnswer = QQuestionAnswer.questionAnswer;
             BooleanBuilder booleanBuilder1 = new BooleanBuilder();
             booleanBuilder1.and(qQuestionAnswer.questionBankByQuestionBankId.eq(selectQuestion.getQuestionBankByQuestionBankId()));
@@ -154,6 +157,7 @@ public class AnswerRecordService {
         booleanBuilder.and(qAnswerRecord.isFill.eq(1));
         return answerRecordRepository.count(booleanBuilder);
     }
+
 
 
 }
