@@ -52,5 +52,9 @@ public class UserController {
         Message message = userService.updateUserPassword(jsonNode);
         return ResponseEntity.ok(message);
     }
-
+    @RequestMapping(value = "/api/user/teacherFindClass",method = RequestMethod.GET)
+    public ResponseEntity teacherFindClass(@RequestParam(value = "teacherId")String teacherId){
+        Message message = userService.teacherFindClass(teacherId);
+        return ResponseEntity.ok(message);
+    }
 }
