@@ -53,7 +53,11 @@ public class UserController {
         Message message = userService.updateUserPassword(jsonNode);
         return ResponseEntity.ok(message);
     }
-
+    @RequestMapping(value = "/api/user/teacherFindClass",method = RequestMethod.GET)
+    public ResponseEntity teacherFindClass(@RequestParam(value = "teacherId")String teacherId){
+        Message message = userService.teacherFindClass(teacherId);
+        return ResponseEntity.ok(message);
+    }
     @RequestMapping(value = "/api/teacher/create", method = RequestMethod.POST)
     public ResponseEntity createTeacher(@RequestBody JSONObject jsonObject){
         ArrayList<Map<String, Object>> userInformationList = (ArrayList) jsonObject.get("teacherInformation");

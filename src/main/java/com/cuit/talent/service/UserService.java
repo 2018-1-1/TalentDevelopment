@@ -1,9 +1,7 @@
 package com.cuit.talent.service;
 
-import com.cuit.talent.model.Grade;
-import com.cuit.talent.model.QUser;
-import com.cuit.talent.model.Role;
-import com.cuit.talent.model.User;
+import com.cuit.talent.model.*;
+import com.cuit.talent.repository.UserGradeRepository;
 import com.cuit.talent.repository.UserRepository;
 import com.cuit.talent.utils.JwtHelper;
 import com.cuit.talent.utils.valueobj.Message;
@@ -20,7 +18,8 @@ import java.util.*;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private UserGradeRepository userGradeRepository;
     @Autowired
     private JwtHelper jwtHelper;
 
@@ -175,8 +174,61 @@ public class UserService {
         message.setMsg("更新密码成功");
         return message;
     }
-    @Transactional
-    public Message createTeacher(ArrayList<Map<String, Object>> userList) {
+	public Message teacherFindClass(String teacherId){
+        Message message = new Message();
+        try {
+            Optional<User> teacher  = null;
+            QUser qUser = QUser.user;
+            BooleanBuilder booleanBuilder2 = new BooleanBuilder();
+            booleanBuilder2.and(qUser.studentId.eq(teacherId));
+            teacher = userRepository.findOne(booleanBuilder2);
+            if(!teacher.isPresent()){
+                message.setMsg("查找失败，没有该老师,ID错误");
+                message.setCode(1);
+                return message;
+            }
+            if(teacher.get().getRoleByRoleId().getId()!=2){
+                message.setMsg("查找失败，该用户不是老师,ID错误");
+                message.setCode(1);
+                return message;
+            }
+            QUserGrade qUserGrade = QUserGrade.userGrade;
+            BooleanBuilder booleanBuilder3 = new BooleanBuilder();
+            booleanBuilder3.and(qUserGrade.userByUserId.eq(teacher.get()));
+            Optional<UserGrade> userGrade = null;
+            userGrade =userGradeRepository.findOne(booleanBuilder3);
+
+            BooleanBuilder booleanBuilder4 = new BooleanBuilder();
+            booleanBuilder4.and(qUserGrade.gradeByGradeId.eq(userGrade.get().getGradeByGradeId()));
+            List<UserGrade> userGradeList  = (List<UserGrade>) userGradeRepository.findAll(booleanBuilder4);
+
+            List<User> userList = new ArrayList<>();
+            Iterator userGrades = userGradeList.iterator();
+            while (userGrades.hasNext()){
+
+                UserGrade userGrade1 = new UserGrade();
+                userGrade1 = (UserGrade) userGrades.next();
+                if(userGrade1.getUserByUserId().getRoleByRoleId().getId()==3){
+                    userGrade1.getUserByUserId().setId(00000);
+                    userGrade1.getUserByUserId().setPassword("*****");
+                    userList.add(userGrade1.getUserByUserId());
+                }
+
+            }
+            message.setMsg("查找成功");
+            message.setCode(1);
+            message.setData(userList);
+        }catch(Exception e){
+            //添加失败
+            message.setMsg("查找错误");
+            message.setCode(0);
+            message.setData("EOORR Course:/n"+e.toString());
+        }
+        return message;
+    }
+
+	@Transactional 
+	public Message createTeacher(ArrayList<Map<String, Object>> userList) {
         Message message = new Message();
         for (int i = 0; i < userList.size(); i++) {
             userList.get(i).forEach((k, v) -> {
