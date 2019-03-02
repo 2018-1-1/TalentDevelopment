@@ -18,7 +18,7 @@ public class UserCourseController {
     private UserCourseService userCourseService;
 
     @RequestMapping(value = "/api/userCourse/selectCourseByStudentId", method = RequestMethod.GET)
-    public ResponseEntity selectCourseByStudentId(@RequestParam("studentId")String studentId){
+    public ResponseEntity selectCourseByStudentId(@RequestParam("studentId")Integer studentId){
         Message message = userCourseService.findUserCourseNameAndMarkByStudentId(studentId);
         return ResponseEntity.ok(message);
     }

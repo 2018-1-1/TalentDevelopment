@@ -23,14 +23,14 @@ public class UserCourseService  {
     private UserRepository userRepository;
     @Autowired
     private EntityManager entityManager;
-    public Message findUserCourseNameAndMarkByStudentId(String studentId){
+    public Message findUserCourseNameAndMarkByStudentId(Integer studentId){
         Message message = new Message();
         try {
 
             List<UserCourseSelect> userCourseSelectList = new ArrayList<UserCourseSelect>();
             QUserCourse userCourse  = QUserCourse.userCourse;
             BooleanBuilder booleanBuilder = new BooleanBuilder();
-            booleanBuilder.and(userCourse.userByUserId.studentId.eq(studentId));
+            booleanBuilder.and(userCourse.userByUserId.id.eq(studentId));
             List<UserCourse> userCourseList = (List<UserCourse>) userCourseRepository.findAll(booleanBuilder);
 
             Iterator it = userCourseList.iterator();

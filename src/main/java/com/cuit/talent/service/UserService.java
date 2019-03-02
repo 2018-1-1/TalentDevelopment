@@ -198,14 +198,14 @@ public class UserService {
 
             List<UserGrade> userGrades = (List<UserGrade>) userGradeRepository.findAll(booleanBuilder3);
             Iterator userGradel = userGrades.iterator();
-            Map<String,Object> map  =  new LinkedHashMap<>();
-            int i = 1;
-            while (userGradel.hasNext()){
+            List list = new ArrayList();
 
+            while (userGradel.hasNext()){
+                Map<String,Object> map  =  new LinkedHashMap<>();
                 UserGrade userGrade = new UserGrade();
                 userGrade = (UserGrade) userGradel.next();
 
-                map.put("class"+i,userGrade);
+                map.put("grade",userGrade.getGradeByGradeId());
                 BooleanBuilder booleanBuilder4 = new BooleanBuilder();
                 booleanBuilder4.and(qUserGrade.gradeByGradeId.eq(userGrade.getGradeByGradeId()));
                 List<UserGrade> userGradeList  = (List<UserGrade>) userGradeRepository.findAll(booleanBuilder4);
@@ -223,15 +223,13 @@ public class UserService {
                     }
 
                 }
-                map.put("students"+i,userList);
-                i++;
+                map.put("students",userList);
+                list.add(map);
+
             }
-
-
-
             message.setMsg("查找成功");
             message.setCode(1);
-            message.setData(map);
+            message.setData(list);
         }catch(Exception e){
             //添加失败
             message.setMsg("查找错误");
