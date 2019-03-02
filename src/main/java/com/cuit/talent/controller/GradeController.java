@@ -1,7 +1,10 @@
 package com.cuit.talent.controller;
 
 import com.cuit.talent.model.Grade;
+import com.cuit.talent.model.UserGrade;
 import com.cuit.talent.service.GradeService;
+import com.cuit.talent.service.UserGradeService;
+import com.cuit.talent.utils.valueobj.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +19,19 @@ public class GradeController {
     @Autowired
     private GradeService gradeService;
 
+    @Autowired
+    private UserGradeService userGradeService;
+
     @RequestMapping(value = "/api/find/grades", method = RequestMethod.GET)
     public ResponseEntity findAllGrade(){
         List<Grade> grades = gradeService.findAll();
         return ResponseEntity.ok(grades);
     }
 
+    @RequestMapping(value = "/api/find/teacherGrades", method = RequestMethod.GET)
+    public ResponseEntity findGredesByTeacherId(Integer userId){
+        List<UserGrade> lists = userGradeService.findByUserId(userId);
+        Message message = gradeService.findByGradeIds(lists);
+        return ResponseEntity.ok(message);
+    }
 }

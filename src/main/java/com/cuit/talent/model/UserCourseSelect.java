@@ -3,6 +3,16 @@ package com.cuit.talent.model;
 public class UserCourseSelect {
     private String courseName;
     private int grade;
+    private int credit;
+
+    public void setCredit(int credit){
+        this.credit = credit;
+    }
+    public int getCredit(){
+        return credit;
+    }
+
+
     public String getCourseName() {
         return courseName;
     }

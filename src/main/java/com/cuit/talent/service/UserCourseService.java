@@ -40,7 +40,7 @@ public class UserCourseService  {
                 UserCourseSelect userCourseSelect = new UserCourseSelect();
                 userCourseSelect.setCourseName(userCourse1.getCourseByCourseId().getCourseName());
                 userCourseSelect.setGrade(userCourse1.getMark());
-
+                userCourseSelect.setCredit(userCourse1.getCourseByCourseId().getCredit());
                 userCourseSelectList.add(userCourseSelect);
 
 
@@ -52,6 +52,7 @@ public class UserCourseService  {
         }catch (Exception e){
             message.setMsg("返回失败");
             message.setCode(0);
+            message.setData(e.toString());
         }
         return message;
     }
@@ -127,6 +128,8 @@ public class UserCourseService  {
             //添加失败
             message.setMsg("添加失败");
             message.setCode(0);
+            System.out.println(e.toString());
+            message.setData(e.toString());
         }
         return message;
     }

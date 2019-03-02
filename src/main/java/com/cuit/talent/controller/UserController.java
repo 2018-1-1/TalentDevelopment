@@ -43,6 +43,7 @@ public class UserController {
         }
         message.setMsg("查询成功");
         message.setCode(1);
+        user.setPassword(null);
         message.setData(user);
         return ResponseEntity.ok(message);
     }
@@ -53,4 +54,10 @@ public class UserController {
         return ResponseEntity.ok(message);
     }
 
+    @RequestMapping(value = "/api/teacher/create", method = RequestMethod.POST)
+    public ResponseEntity createTeacher(@RequestBody JSONObject jsonObject){
+        ArrayList<Map<String, Object>> userInformationList = (ArrayList) jsonObject.get("teacherInformation");
+        Message message = userService.createTeacher(userInformationList);
+        return ResponseEntity.ok(message);
+    }
 }
