@@ -174,7 +174,7 @@ public class UserService {
         message.setMsg("更新密码成功");
         return message;
     }
-	public Message teacherFindClass(String teacherId){
+    public Message teacherFindClass(String teacherId){
         Message message = new Message();
         try {
             Optional<User> teacher  = null;
@@ -195,29 +195,43 @@ public class UserService {
             QUserGrade qUserGrade = QUserGrade.userGrade;
             BooleanBuilder booleanBuilder3 = new BooleanBuilder();
             booleanBuilder3.and(qUserGrade.userByUserId.eq(teacher.get()));
-            Optional<UserGrade> userGrade = null;
-            userGrade =userGradeRepository.findOne(booleanBuilder3);
 
-            BooleanBuilder booleanBuilder4 = new BooleanBuilder();
-            booleanBuilder4.and(qUserGrade.gradeByGradeId.eq(userGrade.get().getGradeByGradeId()));
-            List<UserGrade> userGradeList  = (List<UserGrade>) userGradeRepository.findAll(booleanBuilder4);
+            List<UserGrade> userGrades = (List<UserGrade>) userGradeRepository.findAll(booleanBuilder3);
+            Iterator userGradel = userGrades.iterator();
+            Map<String,Object> map  =  new LinkedHashMap<>();
+            int i = 1;
+            while (userGradel.hasNext()){
 
-            List<User> userList = new ArrayList<>();
-            Iterator userGrades = userGradeList.iterator();
-            while (userGrades.hasNext()){
+                UserGrade userGrade = new UserGrade();
+                userGrade = (UserGrade) userGradel.next();
 
-                UserGrade userGrade1 = new UserGrade();
-                userGrade1 = (UserGrade) userGrades.next();
-                if(userGrade1.getUserByUserId().getRoleByRoleId().getId()==3){
-                    userGrade1.getUserByUserId().setId(00000);
-                    userGrade1.getUserByUserId().setPassword("*****");
-                    userList.add(userGrade1.getUserByUserId());
+                map.put("class"+i,userGrade);
+                BooleanBuilder booleanBuilder4 = new BooleanBuilder();
+                booleanBuilder4.and(qUserGrade.gradeByGradeId.eq(userGrade.getGradeByGradeId()));
+                List<UserGrade> userGradeList  = (List<UserGrade>) userGradeRepository.findAll(booleanBuilder4);
+
+                List<User> userList = new ArrayList<User>();
+                Iterator userGrades1 = userGradeList.iterator();
+                while (userGrades1.hasNext()){
+
+                    UserGrade userGrade1 = new UserGrade();
+                    userGrade1 = (UserGrade) userGrades1.next();
+                    if(userGrade1.getUserByUserId().getRoleByRoleId().getId()==3){
+
+                        userGrade1.getUserByUserId().setPassword("*****");
+                        userList.add(userGrade1.getUserByUserId());
+                    }
+
                 }
-
+                map.put("students"+i,userList);
+                i++;
             }
+
+
+
             message.setMsg("查找成功");
             message.setCode(1);
-            message.setData(userList);
+            message.setData(map);
         }catch(Exception e){
             //添加失败
             message.setMsg("查找错误");
@@ -227,7 +241,10 @@ public class UserService {
         return message;
     }
 
-	@Transactional 
+
+
+
+    @Transactional
 	public Message createTeacher(ArrayList<Map<String, Object>> userList) {
         Message message = new Message();
         for (int i = 0; i < userList.size(); i++) {
