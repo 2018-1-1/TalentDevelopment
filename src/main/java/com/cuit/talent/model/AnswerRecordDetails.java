@@ -13,6 +13,10 @@ public class AnswerRecordDetails {
     private int optionD;
     private int optionE;
     private int optionF;
+    private int optionG;
+    private int optionH;
+    private int optionI;
+    private int optionJ;
     private String fillBlankAnswer;
     private QuestionBank questionBankByQuestionBankId;
     private AnswerRecord answerRecordByAnswerRecordId;
@@ -90,6 +94,46 @@ public class AnswerRecordDetails {
     }
 
     @Basic
+    @Column(name = "option_g")
+    public int getOptionG() {
+        return optionG;
+    }
+
+    public void setOptionG(int optionG) {
+        this.optionG = optionG;
+    }
+
+    @Basic
+    @Column(name = "option_h")
+    public int getOptionH() {
+        return optionH;
+    }
+
+    public void setOptionH(int optionH) {
+        this.optionH = optionH;
+    }
+
+    @Basic
+    @Column(name = "option_i")
+    public int getOptionI() {
+        return optionI;
+    }
+
+    public void setOptionI(int optionI) {
+        this.optionI = optionI;
+    }
+
+    @Basic
+    @Column(name = "option_j")
+    public int getOptionJ() {
+        return optionJ;
+    }
+
+    public void setOptionJ(int optionJ) {
+        this.optionJ = optionJ;
+    }
+
+    @Basic
     @Column(name = "fill_blank_answer")
     public String getFillBlankAnswer() {
         return fillBlankAnswer;
@@ -111,12 +155,16 @@ public class AnswerRecordDetails {
                 optionD == that.optionD &&
                 optionE == that.optionE &&
                 optionF == that.optionF &&
+                optionG == that.optionG &&
+                optionH == that.optionH &&
+                optionI == that.optionI &&
+                optionJ == that.optionJ &&
                 Objects.equals(fillBlankAnswer, that.fillBlankAnswer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, optionA, optionB, optionC, optionD, optionE, optionF, fillBlankAnswer);
+        return Objects.hash(id, optionA, optionB, optionC, optionD, optionE, optionF, fillBlankAnswer,optionG,optionH,optionI,optionJ);
     }
 
     @ManyToOne
