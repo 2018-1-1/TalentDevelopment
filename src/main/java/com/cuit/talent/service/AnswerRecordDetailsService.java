@@ -96,6 +96,18 @@ public class AnswerRecordDetailsService {
             case 6:
                 answerRecordDetails.setOptionF(1);
                 break;
+            case 7:
+                answerRecordDetails.setOptionG(1);
+                break;
+            case 8:
+                answerRecordDetails.setOptionH(1);
+                break;
+            case 9:
+                answerRecordDetails.setOptionI(1);
+                break;
+            case 10:
+                answerRecordDetails.setOptionJ(1);
+                break;
             default:
                 break;
         }

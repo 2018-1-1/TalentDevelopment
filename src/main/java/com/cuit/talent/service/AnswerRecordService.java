@@ -139,6 +139,18 @@ public class AnswerRecordService {
             case 6:
                 booleanBuilder.and(qAnswerRecordDetails.optionF.eq(1));
                 break;
+            case 7:
+                booleanBuilder.and(qAnswerRecordDetails.optionG.eq(1));
+                break;
+            case 8:
+                booleanBuilder.and(qAnswerRecordDetails.optionH.eq(1));
+                break;
+            case 9:
+                booleanBuilder.and(qAnswerRecordDetails.optionI.eq(1));
+                break;
+            case 10:
+                booleanBuilder.and(qAnswerRecordDetails.optionJ.eq(1));
+                break;
             default:
                 isSelect = false;
                 break;
