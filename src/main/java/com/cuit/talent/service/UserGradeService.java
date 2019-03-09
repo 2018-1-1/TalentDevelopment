@@ -7,12 +7,10 @@ import com.cuit.talent.model.UserGrade;
 import com.cuit.talent.repository.UserGradeRepository;
 import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
-import javafx.util.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

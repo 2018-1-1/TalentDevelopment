@@ -51,6 +51,22 @@ public class QuestionnaireIssueController {
         return ResponseEntity.ok(message);
     }
 
+
+    @RequestMapping(value = "/api/questionnaire/findAllQuestionnaireIssueAndFillNumberByUserId", method = RequestMethod.GET)
+    public ResponseEntity findAllQuestionnaireIssueAndFillNumberByUserId(Integer userId){
+        Message message =  new Message();
+        try {
+            message.setData(questionnaireIssueService.findAllQuestionnaireIssueAndFillNumberByUserId(userId));
+            message.setMsg("获取自己发布的所有问卷及所填次数成功");
+            message.setCode(1);
+        }catch (Exception e){
+            e.printStackTrace();
+            message.setCode(0);
+            message.setMsg("获取失败");
+        }
+
+        return ResponseEntity.ok(message);
+    }
     @RequestMapping(value = "/api/questionnaire/deleteQuestionnaireIssueById", method = RequestMethod.POST)
     public ResponseEntity deleteQuestionnaireIssueByUserId(@RequestBody JsonNode jsonNode){
         Message message =  new Message();

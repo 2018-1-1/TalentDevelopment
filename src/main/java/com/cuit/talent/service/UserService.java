@@ -1,9 +1,7 @@
 package com.cuit.talent.service;
 
-import com.cuit.talent.model.Grade;
-import com.cuit.talent.model.QUser;
-import com.cuit.talent.model.Role;
-import com.cuit.talent.model.User;
+import com.cuit.talent.model.*;
+import com.cuit.talent.repository.UserGradeRepository;
 import com.cuit.talent.repository.UserRepository;
 import com.cuit.talent.utils.JwtHelper;
 import com.cuit.talent.utils.valueobj.Message;
@@ -12,16 +10,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.*;
-
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private UserGradeRepository userGradeRepository;
     @Autowired
     private JwtHelper jwtHelper;
 
@@ -40,6 +38,7 @@ public class UserService {
     String studentId = null;
     String grade = null;
     String startDate = null;
+    List<Integer> grades = null;
 
     public User findByStudentId(String studentId) {
         QUser user = QUser.user;
@@ -63,7 +62,7 @@ public class UserService {
         return existUser.get();
     }
 
-    @Transactional
+
     public Message ensureUser(String studentId, String password) {
         Message message = new Message();
         if (studentId.trim().isEmpty() || studentId.equals(null)
@@ -96,7 +95,7 @@ public class UserService {
             return message;
         }
     }
-
+    @Transactional
     public Message createUser(ArrayList<Map<String, Object>> userList) {
         Message message = new Message();
         for (int i = 0; i < userList.size(); i++) {
@@ -173,6 +172,110 @@ public class UserService {
         userRepository.saveAndFlush(existsUser);
         message.setCode(1);
         message.setMsg("更新密码成功");
+        return message;
+    }
+    public Message teacherFindClass(String teacherId){
+        Message message = new Message();
+        try {
+            Optional<User> teacher  = null;
+            QUser qUser = QUser.user;
+            BooleanBuilder booleanBuilder2 = new BooleanBuilder();
+            booleanBuilder2.and(qUser.studentId.eq(teacherId));
+            teacher = userRepository.findOne(booleanBuilder2);
+            if(!teacher.isPresent()){
+                message.setMsg("查找失败，没有该老师,ID错误");
+                message.setCode(1);
+                return message;
+            }
+            if(teacher.get().getRoleByRoleId().getId()!=2){
+                message.setMsg("查找失败，该用户不是老师,ID错误");
+                message.setCode(1);
+                return message;
+            }
+            QUserGrade qUserGrade = QUserGrade.userGrade;
+            BooleanBuilder booleanBuilder3 = new BooleanBuilder();
+            booleanBuilder3.and(qUserGrade.userByUserId.eq(teacher.get()));
+
+            List<UserGrade> userGrades = (List<UserGrade>) userGradeRepository.findAll(booleanBuilder3);
+            Iterator userGradel = userGrades.iterator();
+            List list = new ArrayList();
+
+            while (userGradel.hasNext()){
+                Map<String,Object> map  =  new LinkedHashMap<>();
+                UserGrade userGrade = new UserGrade();
+                userGrade = (UserGrade) userGradel.next();
+
+                map.put("grade",userGrade.getGradeByGradeId());
+                BooleanBuilder booleanBuilder4 = new BooleanBuilder();
+                booleanBuilder4.and(qUserGrade.gradeByGradeId.eq(userGrade.getGradeByGradeId()));
+                List<UserGrade> userGradeList  = (List<UserGrade>) userGradeRepository.findAll(booleanBuilder4);
+
+                List<User> userList = new ArrayList<User>();
+                Iterator userGrades1 = userGradeList.iterator();
+                while (userGrades1.hasNext()){
+
+                    UserGrade userGrade1 = new UserGrade();
+                    userGrade1 = (UserGrade) userGrades1.next();
+                    if(userGrade1.getUserByUserId().getRoleByRoleId().getId()==3){
+
+                        userGrade1.getUserByUserId().setPassword("*****");
+                        userList.add(userGrade1.getUserByUserId());
+                    }
+
+                }
+                map.put("students",userList);
+                list.add(map);
+
+            }
+            message.setMsg("查找成功");
+            message.setCode(1);
+            message.setData(list);
+        }catch(Exception e){
+            //添加失败
+            message.setMsg("查找错误");
+            message.setCode(0);
+            message.setData("EOORR Course:/n"+e.toString());
+        }
+        return message;
+    }
+
+
+
+
+    @Transactional
+	public Message createTeacher(ArrayList<Map<String, Object>> userList) {
+        Message message = new Message();
+        for (int i = 0; i < userList.size(); i++) {
+            userList.get(i).forEach((k, v) -> {
+                if (k.equals("账号")) studentId = (String) v;
+                if (k.equals("姓名")) username = (String) v;
+                if (k.equals("性别")) {
+                    if (v.equals("男")) sex = "1";
+                    if (v.equals("女")) sex = "0";
+                }
+                if (k.equals("grades")) grades = (List<Integer>) v;
+            });
+            User user = new User();
+            user.setUsername(username);
+            user.setStudentId(studentId);
+            user.setSex(Integer.parseInt(sex));
+            user.setPassword(studentId);
+            if (this.findByStudentId(studentId) != null) {
+                message.setCode(0);
+                message.setMsg("帐号为" + studentId + "的老师已经录入过");
+                return message;
+            }
+            Role role = new Role();
+            role.setId(2);
+            user.setRoleByRoleId(role);
+            userRepository.saveAndFlush(user);
+            grades.forEach(j -> {
+                Grade grade1 = gradeService.findByGradeId(j).get();
+                userGradeService.createUserGrade(user, grade1);
+            });
+        }
+        message.setCode(1);
+        message.setMsg("录入学生信息成功");
         return message;
     }
 }

@@ -8,6 +8,7 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @Service
@@ -43,6 +44,9 @@ public class AnswerRecordService {
 
         for (SelectQuestion selectQuestion : selectQuestionList) {
 
+            if (selectQuestion.getQuestionBankByQuestionBankId().getQuestionTypeByQuestionTypeId().getId() == 3) {
+                continue;
+            }
             QQuestionAnswer qQuestionAnswer = QQuestionAnswer.questionAnswer;
             BooleanBuilder booleanBuilder1 = new BooleanBuilder();
             booleanBuilder1.and(qQuestionAnswer.questionBankByQuestionBankId.eq(selectQuestion.getQuestionBankByQuestionBankId()));
@@ -135,6 +139,18 @@ public class AnswerRecordService {
             case 6:
                 booleanBuilder.and(qAnswerRecordDetails.optionF.eq(1));
                 break;
+            case 7:
+                booleanBuilder.and(qAnswerRecordDetails.optionG.eq(1));
+                break;
+            case 8:
+                booleanBuilder.and(qAnswerRecordDetails.optionH.eq(1));
+                break;
+            case 9:
+                booleanBuilder.and(qAnswerRecordDetails.optionI.eq(1));
+                break;
+            case 10:
+                booleanBuilder.and(qAnswerRecordDetails.optionJ.eq(1));
+                break;
             default:
                 isSelect = false;
                 break;
@@ -144,6 +160,16 @@ public class AnswerRecordService {
         }
         return count;
     }
+
+
+    public Long findQuestionnaireIssueFillNumberByQuestionnaireIssueId(Integer questionnaireIssueId){
+        QAnswerRecord qAnswerRecord = QAnswerRecord.answerRecord;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qAnswerRecord.questionnaireIssueByQuestionnaireIssueId.id.eq(questionnaireIssueId));
+        booleanBuilder.and(qAnswerRecord.isFill.eq(1));
+        return answerRecordRepository.count(booleanBuilder);
+    }
+
 
 
 }

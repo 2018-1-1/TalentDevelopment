@@ -10,45 +10,56 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 @Service
-public class UserCourseService {
+public class UserCourseService  {
     @Autowired
     private UserCourseRepository userCourseRepository;
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
     private UserRepository userRepository;
-
-    public Message findUserCourseNameAndMarkByStudentId(String studentId){
+    @Autowired
+    private EntityManager entityManager;
+    public Message findUserCourseNameAndMarkByStudentId(Integer studentId){
         Message message = new Message();
         try {
-            Map<String, Object> map = new HashMap<>();
 
+            List<UserCourseSelect> userCourseSelectList = new ArrayList<UserCourseSelect>();
             QUserCourse userCourse  = QUserCourse.userCourse;
             BooleanBuilder booleanBuilder = new BooleanBuilder();
-            booleanBuilder.and(userCourse.userByUserId.studentId.eq(studentId));
+            booleanBuilder.and(userCourse.userByUserId.id.eq(studentId));
             List<UserCourse> userCourseList = (List<UserCourse>) userCourseRepository.findAll(booleanBuilder);
 
             Iterator it = userCourseList.iterator();
             while(it.hasNext()) {
                 UserCourse userCourse1 = (UserCourse) it.next();
-                map.put(userCourse1.getCourseByCourseId().getCourseName(),userCourse1.getMark());
+
+                UserCourseSelect userCourseSelect = new UserCourseSelect();
+                userCourseSelect.setCourseName(userCourse1.getCourseByCourseId().getCourseName());
+                userCourseSelect.setGrade(userCourse1.getMark());
+                userCourseSelect.setCredit(userCourse1.getCourseByCourseId().getCredit());
+                userCourseSelectList.add(userCourseSelect);
+
+
             }
 
             message.setMsg("返回成功");
             message.setCode(1);
-            message.setData(map);
+            message.setData(userCourseSelectList);
         }catch (Exception e){
             message.setMsg("返回失败");
             message.setCode(0);
+            message.setData(e.toString());
         }
         return message;
     }
     //从JSONObject中得到学生user和对应的课程course，将课程的分数记录到mark
     public Message addUserCourse(ArrayList<Map<String, Object>> userCourseList){
         Message message = new Message();
+
         boolean userfind = false;
         int mark = 0;
         try{
@@ -58,9 +69,9 @@ public class UserCourseService {
                 for (Map.Entry<String, Object> entry : userCourseList.get(i).entrySet()) {
                     String key = entry.getKey();
                     System.out.println("first key"+i+":"+entry.getKey());
-                   
+
                     if (key.equals("学号")) {
-                        String valueStudentid = (String) entry.getValue();
+                        String valueStudentid = (Integer) entry.getValue()+"";
                         System.out.println(valueStudentid+"---valueStudentid");
                         QUser qUser = QUser.user;//查找学生
                         BooleanBuilder booleanBuilder1 = new BooleanBuilder();
@@ -73,12 +84,14 @@ public class UserCourseService {
                             userfind=true;
                         }else {
                             System.out.println("user:"+user.get().getUsername());
+
                         }
                         break;
                     }
                 }
 
                 if(!userfind){
+
                     for (Map.Entry<String, Object> entry : userCourseList.get(i).entrySet()) {
                         Optional<Course> course = null;
                         String keyCourseName = entry.getKey();
@@ -89,15 +102,20 @@ public class UserCourseService {
                         course = courseRepository.findOne(booleanBuilder2);
                         //如果查到找该课程：添加；
                         if(course.isPresent()){
-                            String valueCourseMark = (String) entry.getValue();
+                            Integer valueCourseMark = (Integer) entry.getValue();
 
-                            mark = Integer.parseInt(valueCourseMark);//分数
+
                             //保存UserCourse
                             UserCourse userCourse = new UserCourse();
+
                             userCourse.setCourseByCourseId(course.get());
-                            userCourse.setMark(mark);
+                            userCourse.setMark(valueCourseMark);
                             userCourse.setUserByUserId(user.get());
-                            userCourseRepository.save(userCourse);
+
+                            System.out.println("11:"+userCourse.getId());
+                            System.out.println("开始保存"+user.get().getUsername()+course.get().getCourseName());
+                            userCourseRepository.saveAndFlush(userCourse);
+                            entityManager.clear();
                             //添加成功
                         }
                     }
@@ -110,6 +128,8 @@ public class UserCourseService {
             //添加失败
             message.setMsg("添加失败");
             message.setCode(0);
+            System.out.println(e.toString());
+            message.setData(e.toString());
         }
         return message;
     }
