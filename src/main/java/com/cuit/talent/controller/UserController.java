@@ -43,6 +43,7 @@ public class UserController {
         }
         message.setMsg("查询成功");
         message.setCode(1);
+        user.setPassword(null);
         message.setData(user);
         return ResponseEntity.ok(message);
     }
