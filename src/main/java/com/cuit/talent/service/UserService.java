@@ -124,7 +124,7 @@ public class UserService {
             role.setId(3);
             user.setRoleByRoleId(role);
             userRepository.saveAndFlush(user);
-            Grade grade1 = gradeService.findByGrade(grade).get();
+            Grade grade1 = gradeService.findByGrade(grade);
             userGradeService.createUserGrade(user, grade1);
         }
         message.setCode(1);

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserGradeService {
@@ -34,5 +35,22 @@ public class UserGradeService {
         List<UserGrade> userGrades =  Lists.newArrayList(userGradeRepository.findAll(booleanBuilder));
         return userGrades;
     }
-
+    public UserGrade findUserGradeByUserIdAndGradeId(Integer userId, Integer gradeId){
+        QUserGrade qUserGrade = QUserGrade.userGrade;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qUserGrade.userByUserId.id.eq(userId));
+        booleanBuilder.and(qUserGrade.gradeByGradeId.id.eq(gradeId));
+        Optional<UserGrade> existUserGrade = userGradeRepository.findOne(booleanBuilder);
+        if (existUserGrade.equals(Optional.empty())) {
+            return null;
+        }
+        return existUserGrade.get();
+    }
+    public List<UserGrade> findByGradeId(Integer gradeId){
+        QUserGrade qUserGrade = QUserGrade.userGrade;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qUserGrade.gradeByGradeId.id.eq(gradeId));
+        List<UserGrade> userGrades =  Lists.newArrayList(userGradeRepository.findAll(booleanBuilder));
+        return userGrades;
+    }
 }

@@ -29,9 +29,24 @@ public class GradeController {
     }
 
     @RequestMapping(value = "/api/find/teacherGrades", method = RequestMethod.GET)
-    public ResponseEntity findGredesByTeacherId(Integer userId){
+    public ResponseEntity findGradesByTeacherId(Integer userId){
         List<UserGrade> lists = userGradeService.findByUserId(userId);
         Message message = gradeService.findByGradeIds(lists);
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "api/grade/gpa", method = RequestMethod.GET)
+    public ResponseEntity findGradeGpa(Integer gradeId){
+        Message message = new Message();
+        if (gradeId == null){
+            message.setCode(0);
+            message.setMsg("gradeId不能为空");
+        }else {
+            message = gradeService.findGradeGpa(gradeId);
+            message.setCode(1);
+            message.setMsg("获取所有绩点成功");
+
+        }
         return ResponseEntity.ok(message);
     }
 }

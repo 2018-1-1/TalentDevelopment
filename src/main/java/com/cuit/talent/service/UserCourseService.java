@@ -6,6 +6,7 @@ import com.cuit.talent.repository.CourseRepository;
 import com.cuit.talent.repository.UserCourseRepository;
 import com.cuit.talent.repository.UserRepository;
 import com.cuit.talent.utils.valueobj.Message;
+import com.cuit.talent.utils.valueobj.UserCourseSelect;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
