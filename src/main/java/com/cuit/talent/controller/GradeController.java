@@ -49,4 +49,19 @@ public class GradeController {
         }
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "api/grade/findGradeStudents", method = RequestMethod.GET)
+    public ResponseEntity findGradeStudents(Integer gradeId){
+        Message message = new Message();
+        if (gradeId == null){
+            message.setCode(0);
+            message.setMsg("gradeId不能为空");
+        }else {
+            message.setData( userGradeService.findStudentsByGradeId(gradeId));
+            message.setCode(1);
+            message.setMsg("获取班级下所有学生成功");
+
+        }
+        return ResponseEntity.ok(message);
+    }
 }

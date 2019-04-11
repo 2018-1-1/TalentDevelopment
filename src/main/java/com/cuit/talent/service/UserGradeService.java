@@ -53,4 +53,16 @@ public class UserGradeService {
         List<UserGrade> userGrades =  Lists.newArrayList(userGradeRepository.findAll(booleanBuilder));
         return userGrades;
     }
+
+    public List<UserGrade> findStudentsByGradeId(Integer gradeId){
+        QUserGrade qUserGrade = QUserGrade.userGrade;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qUserGrade.gradeByGradeId.id.eq(gradeId));
+        booleanBuilder.and(qUserGrade.userByUserId.roleByRoleId.id.eq(3));
+        List<UserGrade> userGrades =  Lists.newArrayList(userGradeRepository.findAll(booleanBuilder));
+        for(UserGrade userGrade :userGrades){
+            userGrade.getUserByUserId().setPassword(null);
+        }
+        return userGrades;
+    }
 }
