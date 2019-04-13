@@ -63,6 +63,8 @@ public class UserCourseService  {
 
         boolean userfind = false;
         int mark = 0;
+        int flagCourseId = -1;
+        List<UserCourse> userCourseList1 = new ArrayList<>() ;
         try{
 
             for(int i = 0 ;i<userCourseList.size();i++){
@@ -85,6 +87,11 @@ public class UserCourseService  {
                             userfind=true;
                         }else {
                             System.out.println("user:"+user.get().getUsername());
+                            QUserCourse qUserCourse = QUserCourse.userCourse;
+                            BooleanBuilder booleanBuilder21 = new BooleanBuilder();
+                            booleanBuilder21.and(QUserCourse.userCourse.userByUserId.eq(user.get()));
+
+                            userCourseList1 = (List<UserCourse>) userCourseRepository.findAll(booleanBuilder21);
 
                         }
                         break;
@@ -105,19 +112,33 @@ public class UserCourseService  {
                         if(course.isPresent()){
                             Integer valueCourseMark = (Integer) entry.getValue();
 
-
+                            Iterator<UserCourse> courseIterator = userCourseList1.iterator();
+                            while(courseIterator.hasNext()){
+                                UserCourse userCourse = courseIterator.next();
+                                if(userCourse.getCourseByCourseId().equals(course.get())){
+                                    flagCourseId = userCourse.getId();
+                                    break;
+                                }
+                            }
                             //保存UserCourse
                             UserCourse userCourse = new UserCourse();
-
+                            if(flagCourseId>0){
+                                userCourse.setId(flagCourseId);
+                                flagCourseId = -1;
+                            }
                             userCourse.setCourseByCourseId(course.get());
                             userCourse.setMark(valueCourseMark);
                             userCourse.setUserByUserId(user.get());
 
                             System.out.println("11:"+userCourse.getId());
                             System.out.println("开始保存"+user.get().getUsername()+course.get().getCourseName());
+
                             userCourseRepository.saveAndFlush(userCourse);
                             entityManager.clear();
                             //添加成功
+                        }else{
+                            System.out.println(keyCourseName+"无该课程");
+                            message.setMsg("无该课程");
                         }
                     }
                 }

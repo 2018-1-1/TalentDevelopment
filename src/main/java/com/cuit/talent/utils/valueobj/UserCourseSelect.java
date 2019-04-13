@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
 public class UserCourseSelect {
     private String courseName;
     private int grade;
-    private int credit;
+    private double credit;
 }

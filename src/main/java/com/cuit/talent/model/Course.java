@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Course {
     private int id;
     private String courseName;
-    private int credit;
+    private double credit;
 
     @Id
     @Column(name = "id")
@@ -34,11 +34,11 @@ public class Course {
 
     @Basic
     @Column(name = "credit")
-    public int getCredit() {
+    public double getCredit() {
         return credit;
     }
 
-    public void setCredit(int credit) {
+    public void setCredit(double credit) {
         this.credit = credit;
     }
 
